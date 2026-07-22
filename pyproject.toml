@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bitcoin-time-series-forecasting"
+version = "1.0.0"
+description = "Leakage-aware Bitcoin next-day forecasting benchmark"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24,<3",
+  "pandas>=2.0,<3",
+  "scikit-learn>=1.3,<2",
+  "matplotlib>=3.7,<4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4,<9"]
+
+[project.scripts]
+bitcoin-forecast = "bitcoin_forecasting.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
