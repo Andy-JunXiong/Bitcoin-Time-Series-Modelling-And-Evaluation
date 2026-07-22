@@ -1,0 +1,47 @@
+[
+  {
+    "model": "naive",
+    "n_test": 181,
+    "mae": 154.06475138121553,
+    "rmse": 295.9987372397285,
+    "mape_percent": 2.2422614826555134,
+    "direction_accuracy_percent": 0.0,
+    "best_params": {}
+  },
+  {
+    "model": "random_forest",
+    "n_test": 181,
+    "mae": 180.98224193038365,
+    "rmse": 305.12647606262095,
+    "mape_percent": 2.8416880082469116,
+    "direction_accuracy_percent": 46.408839779005525,
+    "best_params": {"max_depth": null, "max_features": 1.0}
+  },
+  {
+    "model": "hist_gradient_boosting",
+    "n_test": 181,
+    "mae": 182.2986165663723,
+    "rmse": 310.09218308309323,
+    "mape_percent": 2.8131224577943854,
+    "direction_accuracy_percent": 50.82872928176796,
+    "best_params": {"learning_rate": 0.03, "max_leaf_nodes": 7}
+  },
+  {
+    "model": "ridge",
+    "n_test": 181,
+    "mae": 189.20177456127675,
+    "rmse": 311.0499994657878,
+    "mape_percent": 3.1375334033089874,
+    "direction_accuracy_percent": 51.38121546961326,
+    "best_params": {"model__alpha": 10.0}
+  },
+  {
+    "model": "elastic_net",
+    "n_test": 181,
+    "mae": 193.13471821288192,
+    "rmse": 316.67217560408574,
+    "mape_percent": 3.1522196154220152,
+    "direction_accuracy_percent": 49.171270718232044,
+    "best_params": {"model__alpha": 1.0, "model__l1_ratio": 0.9}
+  }
+]
