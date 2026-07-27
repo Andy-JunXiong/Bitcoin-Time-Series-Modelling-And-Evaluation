@@ -40,6 +40,8 @@ dev.stderr.log
 next-env.d.ts
 /dist/
 /pages-dist/
+/html-dist/
+/*.zip
 /.wrangler/
 /outputs/
 /work/

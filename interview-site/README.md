@@ -26,6 +26,16 @@ The test command creates a production build and verifies that the rendered page
 contains the governed platform evidence, release decision, charts, and social
 metadata.
 
+## Export as HTML
+
+```bash
+npm run build
+npm run export:html
+```
+
+The static presentation is written to `html-dist/`. Keep `index.html` and its
+asset folders together when copying or uploading the presentation.
+
 ## Evidence inputs
 
 The presentation is generated from versioned artifacts copied from the main
