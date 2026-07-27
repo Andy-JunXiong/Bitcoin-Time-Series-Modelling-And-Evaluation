@@ -9,17 +9,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const origin = `${protocol}://${host}`;
 
   return {
-    title: "Bitcoin Forecast Intelligence — governed cross-regime research",
-    description: "A reproducible Bitcoin forecasting platform with data contracts, cross-regime evaluation, feature ablation, and fail-safe model release gates.",
+    title: "Bitcoin Benchmark Report — governed cross-regime evidence",
+    description: "A provenance-first Bitcoin forecasting benchmark with JSON-sourced metrics, cross-regime evaluation, feature ablation, and fail-safe release gates.",
     icons: { icon: "/favicon.svg" },
     openGraph: {
-      title: "The model failed. The platform succeeded.",
+      title: "Bitcoin Forecast Benchmark Report",
       description: "Seven market regimes, zero candidate wins, and a release gate that preserved the honest baseline.",
       images: [{ url: `${origin}/og.png`, width: 1672, height: 941, alt: "Bitcoin Forecast Intelligence release decision" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Bitcoin Forecast Intelligence",
+      title: "Bitcoin Forecast Benchmark Report",
       description: "Seven market regimes, zero candidate wins, and a release gate that preserved the honest baseline.",
       images: [`${origin}/og.png`],
     },

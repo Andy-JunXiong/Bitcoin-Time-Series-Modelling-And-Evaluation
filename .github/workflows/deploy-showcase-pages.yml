@@ -29,7 +29,12 @@ jobs:
         shell: bash
         run: |
           mkdir -p _site
-          cp interview-site/bitcoin-forecast-intelligence.html _site/index.html
+          sed "s/__COMMIT_SHA__/${GITHUB_SHA::7}/g" \
+            interview-site/bitcoin-forecast-intelligence.html > _site/index.html
+          if grep -q "__COMMIT_SHA__" _site/index.html; then
+            echo "Commit provenance injection failed" >&2
+            exit 1
+          fi
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
         with:

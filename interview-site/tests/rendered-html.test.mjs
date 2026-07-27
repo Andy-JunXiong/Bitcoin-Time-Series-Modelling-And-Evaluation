@@ -15,10 +15,10 @@ test("server-renders the governed platform case study", async () => {
   assert.match(html, /Bitcoin Forecast Intelligence/);
   assert.match(html, /3,261/);
   assert.match(html, /Candidate rejected/i);
-  assert.match(html, /01 \/ INQUIRY/);
-  assert.match(html, /05 \/ METHOD/);
-  assert.match(html, /0 \/ 7 REGIMES/);
-  assert.match(html, /0 \/ 4 ML MODELS BEAT PERSISTENCE/);
+  assert.match(html, /CROSS-REGIME RELEASE EVIDENCE/);
+  assert.match(html, /METHODOLOGY \/ CONTROL LOG/);
+  assert.match(html, /REGIMES &gt; BASELINE/);
+  assert.match(html, /ML MODELS &gt; NAIVE/);
 });
 
 test("ships production metadata and generated evidence", async () => {

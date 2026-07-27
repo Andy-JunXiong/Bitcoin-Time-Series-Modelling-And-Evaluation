@@ -10,9 +10,12 @@ test("standalone showcase embeds its presentation assets", async () => {
   assert.match(html, /<!doctype html>/i);
   assert.match(html, /Bitcoin Forecast Intelligence/);
   assert.match(html, /Candidate rejected/i);
+  assert.match(html, /commit:\s*(?:<!-- -->)?__COMMIT_SHA__/);
   assert.match(html, /<style>/);
   assert.match(html, /data:image\/svg\+xml;base64,/);
   assert.doesNotMatch(html, /<script\b/i);
   assert.doesNotMatch(html, /(?:src|href)="\.?\//i);
   assert.doesNotMatch(html, /modulepreload|data-rsc-css-href/i);
+  assert.doesNotMatch(html, /font-family:[^;}]*serif/i);
+  assert.doesNotMatch(html, /linear-gradient|radial-gradient|animation:/i);
 });
