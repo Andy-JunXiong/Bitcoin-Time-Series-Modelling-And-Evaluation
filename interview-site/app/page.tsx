@@ -1,186 +1,176 @@
 const regimes = [
-  ["2018 BEAR", "370.2", "501.0", "-35.3%", "50.00%"],
-  ["2020 SHOCK", "424.8", "445.3", "-4.8%", "50.27%"],
-  ["2021 BULL", "423.2", "609.2", "-44.0%", "50.14%"],
-  ["2022 DELEVERAGING", "337.8", "383.3", "-13.5%", "48.77%"],
-  ["2023 RECOVERY", "229.2", "233.9", "-2.0%", "52.88%"],
-  ["2024 INSTITUTIONAL", "276.2", "281.9", "-2.1%", "51.37%"],
-  ["2025 RECENT", "217.8", "223.3", "-2.5%", "50.96%"],
+  ["2018", "BEAR MARKET", 370.2, 501.0, "-35.3%", "50.00%"],
+  ["2020", "SHOCK + RECOVERY", 424.8, 445.3, "-4.8%", "50.27%"],
+  ["2021", "BULL MARKET", 423.2, 609.2, "-44.0%", "50.14%"],
+  ["2022", "DELEVERAGING", 337.8, 383.3, "-13.5%", "48.77%"],
+  ["2023", "RECOVERY", 229.2, 233.9, "-2.0%", "52.88%"],
+  ["2024", "INSTITUTIONAL CYCLE", 276.2, 281.9, "-2.1%", "51.37%"],
+  ["2025", "RECENT MARKET", 217.8, 223.3, "-2.5%", "50.96%"],
 ];
 
 const questions = [
-  ["01", "What exactly is being predicted?", "Information available at the end of day t estimates Bitcoin's log return on day t + 1.", "DAY t FEATURES -> DAY t + 1 RETURN"],
-  ["02", "Did the candidate beat the baseline?", "No. The Ridge candidate lost to a zero-return forecast in every declared regime.", "0 OF 7 REGIMES WON"],
-  ["03", "Was temporal leakage controlled?", "Yes. Shifted rolling features and expanding-history folds preserve the forecasting boundary.", "LEAKAGE-SAFE PIPELINE"],
-  ["04", "Did more market fields help?", "Not reliably. Price history lost less badly than the larger OHLCV and full feature groups.", "PRICE HISTORY: 1 OF 7"],
-  ["05", "Did direction accuracy change the decision?", "No. Mean direction accuracy was 50.63%, which is not evidence of economic value.", "50.63% MEAN DIRECTION"],
-  ["06", "What is the defensible conclusion?", "Model complexity did not create stable out-of-sample improvement, so the baseline stayed approved.", "CANDIDATE REJECTED"],
+  ["01", "What is predicted?", "Day t information estimates the log return on day t + 1.", "NEXT-DAY LOG RETURN"],
+  ["02", "Did the candidate win?", "No. Ridge lost to zero return in every declared market regime.", "0 / 7 REGIMES"],
+  ["03", "Was leakage controlled?", "Shifted windows and expanding-history folds preserve the temporal boundary.", "STRICTLY PRIOR HISTORY"],
+  ["04", "Did OHLCV add signal?", "Not reliably. Price history lost less badly than the larger feature groups.", "1 / 7 VS 0 / 7"],
+  ["05", "Did direction help?", "50.63% mean accuracy is not evidence of economic value.", "NO RELEASE OVERRIDE"],
+  ["06", "What was released?", "Nothing. The candidate was rejected and the baseline remained approved.", "FAIL-SAFE DECISION"],
 ];
 
-const pipeline = [
-  ["01", "SOURCE", "Complete Binance BTCUSDT UTC candles"],
-  ["02", "VALIDATE", "Dates, continuity, nulls and OHLC invariants"],
-  ["03", "FEATURES", "Causal lags and shifted rolling windows"],
-  ["04", "BACKTEST", "Seven expanding-history market regimes"],
-  ["05", "ABLATE", "Price, OHLCV and full feature groups"],
-  ["06", "RELEASE", "Versioned gate preserves the baseline"],
+const stages = [
+  ["01", "SOURCE", "Complete BTCUSDT daily candles"],
+  ["02", "CONTRACT", "Continuity, uniqueness and OHLC invariants"],
+  ["03", "FEATURE", "Causal lags and shifted windows"],
+  ["04", "OBSERVE", "Seven expanding-history regimes"],
+  ["05", "CHALLENGE", "Ablation and zero-return baseline"],
+  ["06", "DECIDE", "Reject or promote by written policy"],
 ];
 
 const legacy = [
-  ["Naive persistence", "154.06", "296.00", "2.24%", "N/A"],
-  ["Random Forest", "180.98", "305.13", "2.84%", "46.41%"],
-  ["HistGradientBoosting", "182.30", "310.09", "2.81%", "50.83%"],
-  ["Ridge", "189.20", "311.05", "3.14%", "51.38%"],
-  ["Elastic Net", "193.13", "316.67", "3.15%", "49.17%"],
+  ["NAIVE PERSISTENCE", "296.00", "154.06"],
+  ["RANDOM FOREST", "305.13", "180.98"],
+  ["HIST GRADIENT BOOSTING", "310.09", "182.30"],
+  ["RIDGE", "311.05", "189.20"],
+  ["ELASTIC NET", "316.67", "193.13"],
 ];
 
 export default function Home() {
   return (
-    <main id="overview">
-      <header className="topbar">
-        <a className="brand" href="#overview"><span className="btc-mark">B</span><span>BITCOIN FORECASTING LAB</span></a>
+    <main id="top">
+      <header className="nav">
+        <a className="wordmark" href="#top"><i>₿</i><span>FORECAST OBSERVATORY</span></a>
         <nav aria-label="Primary navigation">
-          <a href="#overview">Overview</a><a href="#questions">Questions</a><a href="#evidence">Evidence</a><a href="#benchmark">Benchmark</a><a href="#system">System</a>
+          <a href="#inquiry">Inquiry</a><a href="#evidence">Evidence</a><a href="#regimes">Regimes</a><a href="#method">Method</a>
         </nav>
-        <span className="verified"><i /> BENCHMARK VERIFIED</span>
+        <a className="repo" href="https://github.com/Andy-JunXiong/Bitcoin-Time-Series-Modelling-And-Evaluation">SOURCE ↗</a>
       </header>
 
-      <aside className="rail" aria-label="Section navigation">
-        <span>RESEARCH / 2026</span>
-        <a href="#overview"><b>01</b> Overview</a>
-        <a href="#questions"><b>02</b> Questions</a>
-        <a href="#evidence"><b>03</b> Evidence</a>
-        <a href="#benchmark"><b>04</b> Benchmark</a>
-        <a href="#system"><b>05</b> System</a>
-        <a href="#conclusion"><b>06</b> Conclusion</a>
-        <small>RMSE LOWER IS BETTER<br />TARGET DAY t + 1<br />UTC DAILY GRAIN</small>
-      </aside>
-
-      <div className="page">
-        <section className="hero">
-          <div className="hero-copy">
-            <span className="eyebrow">RESEARCH BENCHMARK / NEXT-DAY RETURNS</span>
-            <h1>Can a return model survive <em>seven Bitcoin regimes?</em></h1>
-            <p className="lead">A leakage-safe, expanding-history evaluation of Bitcoin return forecasting against an auditable zero-return baseline.</p>
-            <p className="support">The project tests whether price history and OHLCV features create genuine out-of-sample value across bear markets, shocks, recoveries and institutional cycles.</p>
-            <div className="actions">
-              <a className="button primary" href="#benchmark">EXPLORE THE BENCHMARK</a>
-              <a className="button secondary" href="https://github.com/Andy-JunXiong/Bitcoin-Time-Series-Modelling-And-Evaluation">VIEW SOURCE CODE <span>↗</span></a>
-            </div>
+      <section className="hero">
+        <div className="hero-copy">
+          <span className="overline">BITCOIN / TIME-SERIES RESEARCH / 2017—2026</span>
+          <h1>Forecasting,<br />without the<br /><em>fiction.</em></h1>
+          <p>A nine-year experiment in asking one hard question: can a model improve on predicting no next-day return?</p>
+          <a className="text-link" href="#regimes">SEE WHAT SURVIVED <span>↓</span></a>
+        </div>
+        <div className="observatory" aria-label="Seven-regime release decision">
+          <div className="orbit orbit-one"><span>2018</span><span>2021</span><span>2025</span></div>
+          <div className="orbit orbit-two"><span>2020</span><span>2023</span></div>
+          <div className="orbit orbit-three"><span>2022</span><span>2024</span></div>
+          <div className="core">
+            <small>REGIMES WON</small><strong>0<span>/7</span></strong><b>CANDIDATE REJECTED</b>
           </div>
-          <div className="hero-ledger" aria-label="Release decision summary">
-            <div className="ledger-head"><span>MODEL RELEASE LEDGER</span><b>REJECTED</b></div>
-            <div className="hash">SHA / EVIDENCE / 2026-07-21</div>
-            <strong className="hero-score">0<span>/7</span></strong>
-            <p>DECLARED REGIMES WON</p>
-            <dl>
-              <div><dt>Candidate</dt><dd>RIDGE / ALPHA 10</dd></div>
-              <div><dt>Mean RMSE lift</dt><dd className="negative">-14.88%</dd></div>
-              <div><dt>Required wins</dt><dd>5 / 7</dd></div>
-              <div><dt>Baseline</dt><dd className="positive">PRESERVED</dd></div>
-            </dl>
-          </div>
-        </section>
+          <div className="axis axis-x" /><div className="axis axis-y" />
+          <span className="north">ZERO-RETURN BASELINE / PRESERVED</span>
+          <span className="east">RIDGE α=10</span>
+        </div>
+      </section>
 
-        <section className="metrics" aria-label="Project metrics">
-          <article><span>COMPLETE UTC DAYS</span><strong>3,261</strong><small>2017-08-17 to 2026-07-21</small></article>
-          <article><span>FEATURE ROWS</span><strong>3,229</strong><small>leakage-safe observations</small></article>
-          <article><span>MARKET REGIMES</span><strong>7</strong><small>expanding-history folds</small></article>
-          <article className="metric-highlight"><span>CANDIDATE WINS</span><strong>0 / 7</strong><small>baseline remains approved</small></article>
-        </section>
+      <section className="ticker" aria-label="Research summary">
+        <div><b>3,261</b><span>COMPLETE UTC DAYS</span></div>
+        <div><b>3,229</b><span>FEATURE ROWS</span></div>
+        <div><b>7</b><span>MARKET REGIMES</span></div>
+        <div><b>-14.88%</b><span>MEAN RMSE LIFT</span></div>
+        <div className="ticker-status"><b>REJECTED</b><span>RELEASE STATUS</span></div>
+      </section>
 
-        <section className="section" id="questions">
-          <header className="section-heading"><span>02 / RESEARCH QUESTIONS</span><h2>Start with the decision boundary.</h2><p>Every answer is tied to committed evidence, a declared rule or a measurable result.</p></header>
-          <div className="question-grid">
-            {questions.map(([number, title, copy, evidence], index) => (
-              <article className={index === 1 ? "question featured" : "question"} key={number}>
-                <span>{number}</span><h3>{title}</h3><p>{copy}</p><strong>{evidence}</strong>
-              </article>
-            ))}
-          </div>
-        </section>
+      <section className="thesis">
+        <span className="section-tag">THE THESIS</span>
+        <blockquote>“The negative result is not an absence of evidence. It is the evidence.”</blockquote>
+        <div>
+          <p>The platform was designed to make a losing model visible, reproducible and safe to reject.</p>
+          <small>NO TRADING CLAIMS<br />NO LIVE PRICE<br />NO PROMOTION WITHOUT EVIDENCE</small>
+        </div>
+      </section>
 
-        <section className="section" id="evidence">
-          <header className="section-heading"><span>03 / MARKET & FEATURE EVIDENCE</span><h2>The model saw more than yesterday's return.</h2><p>More inputs were allowed to compete. None were assumed to add signal.</p></header>
-          <div className="evidence-grid">
-            <article className="evidence-lead">
-              <span>FINDING 01</span><h3>A hard baseline is a feature, not an inconvenience.</h3>
-              <p>A zero-return forecast asks the candidate to improve on no predictable movement. Across all seven regimes, the Ridge model increased RMSE.</p>
-              <div className="range"><i /><b>2017</b><i /><b>2019</b><i /><b>2021</b><i /><b>2023</b><i /><b>2025</b></div>
+      <section className="inquiry section" id="inquiry">
+        <header><span className="section-tag">01 / INQUIRY</span><h2>Six questions.<br />No convenient answers.</h2></header>
+        <div className="question-list">
+          {questions.map(([number, title, copy, result]) => (
+            <article key={number}>
+              <span>{number}</span><h3>{title}</h3><p>{copy}</p><strong>{result}</strong>
             </article>
-            <article><span>FINDING 02 / PRICE HISTORY</span><h3>28 causal features</h3><ul><li>1, 2, 3, 7, 14 and 30-day lags</li><li>Rolling price means</li><li>Return and volatility history</li></ul></article>
-            <article><span>FINDING 03 / OHLCV</span><h3>7 added market fields</h3><ul><li>Open, high, low and close</li><li>Base and quote volume</li><li>Trade count and volume change</li></ul></article>
-          </div>
-          <div className="feature-flow">
-            <div><span>01</span><b>PRICE HISTORY</b><small>lags + returns</small></div><i>→</i>
-            <div><span>02</span><b>OHLCV ACTIVITY</b><small>market fields</small></div><i>→</i>
-            <div><span>03</span><b>SHIFTED WINDOWS</b><small>no future access</small></div><i>→</i>
-            <div><span>04</span><b>NEXT-DAY RETURN</b><small>day t + 1 target</small></div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        <section className="section benchmark" id="benchmark">
-          <header className="section-heading"><span>04 / CROSS-REGIME BENCHMARK</span><h2>The candidate was required to beat doing nothing.</h2><p>Each fold trained only on history before the named market regime.</p></header>
-          <div className="benchmark-layout">
-            <div className="table-wrap">
-              <table>
-                <caption>Ridge log-return candidate / return RMSE in basis points</caption>
-                <thead><tr><th>Regime</th><th>Baseline</th><th>Candidate</th><th>Lift</th><th>Direction</th></tr></thead>
-                <tbody>{regimes.map((row) => <tr key={row[0]}>{row.map((value, index) => <td className={index === 3 ? "negative" : ""} key={value}>{value}</td>)}</tr>)}</tbody>
-              </table>
-            </div>
-            <aside className="result-card"><span>RELEASE RESULT</span><strong>0 / 7</strong><h3>Candidate regimes won.</h3><p>Metric: cross-regime RMSE<br />Lower is better</p><b>BASELINE PRESERVED</b></aside>
-          </div>
+      <section className="evidence section" id="evidence">
+        <header><span className="section-tag">02 / EVIDENCE FIELD</span><h2>Every feature remains on the correct side of time.</h2></header>
+        <div className="constellation">
+          <div className="target"><span>TARGET</span><strong>t + 1</strong><small>LOG RETURN</small></div>
+          <div className="feature f1"><b>PRICE</b><span>1 / 2 / 3 / 7 / 14 / 30D</span></div>
+          <div className="feature f2"><b>RETURNS</b><span>LAGS + VOLATILITY</span></div>
+          <div className="feature f3"><b>OHLC</b><span>DAILY MARKET RANGE</span></div>
+          <div className="feature f4"><b>VOLUME</b><span>BASE + QUOTE</span></div>
+          <div className="feature f5"><b>ACTIVITY</b><span>TRADE COUNT</span></div>
+          <div className="feature f6"><b>CALENDAR</b><span>DAY + MONTH</span></div>
+          <i className="path p1" /><i className="path p2" /><i className="path p3" />
+        </div>
+        <div className="evidence-notes">
+          <article><span>BOUNDARY</span><h3>Shift first. Calculate second.</h3><p>Rolling statistics use only information available at the end of day t.</p></article>
+          <article><span>CONTRACT</span><h3>One symbol. One complete UTC day.</h3><p>Continuity, numeric validity, uniqueness and OHLC relationships are checked before research.</p></article>
+          <article><span>LINEAGE</span><h3>Raw history is checksum-bound.</h3><p>The manifest records source, coverage, row count and SHA-256 evidence.</p></article>
+        </div>
+      </section>
 
-          <div className="negative-result">
-            <header><span>THE NEGATIVE RESULT</span><h2>IS THE RESULT.</h2><p>More features did not produce more reliable forecasts. The release gate prevented complexity from being mistaken for predictive value.</p></header>
-            <div className="result-facts">
-              <article className="orange-top"><span>BASELINE</span><strong>ZERO RETURN</strong><b>0 / 7 LOSSES</b></article>
-              <article><span>CLOSEST FEATURE GROUP</span><strong>PRICE HISTORY</strong><b>-7.60% MEAN LIFT</b></article>
-              <article className="signal-top"><span>DIRECTION ACCURACY</span><strong>RIDGE</strong><b>50.63% MEAN</b></article>
-            </div>
-          </div>
+      <section className="regimes section" id="regimes">
+        <header><span className="section-tag">03 / REGIME SPECTRUM</span><h2>Seven climates.<br />The same verdict.</h2><p>Return RMSE in basis points. Shorter is better.</p></header>
+        <div className="spectrum">
+          {regimes.map(([year, name, baseline, candidate, lift, direction]) => (
+            <article key={String(year)}>
+              <div className="regime-name"><b>{year}</b><span>{name}</span></div>
+              <div className="tracks">
+                <div><span>BASE</span><i style={{ width: `${Number(baseline) / 6.5}%` }} /><em>{baseline}</em></div>
+                <div className="candidate"><span>MODEL</span><i style={{ width: `${Number(candidate) / 6.5}%` }} /><em>{candidate}</em></div>
+              </div>
+              <div className="regime-outcome"><b>{lift}</b><span>{direction} DIR.</span></div>
+            </article>
+          ))}
+        </div>
+        <div className="verdict">
+          <div><span>RELEASE OBSERVATION</span><strong>0</strong><small>REGIMES WON</small></div>
+          <p>The candidate failed both written conditions: at least five regime wins and positive average RMSE improvement.</p>
+          <b>BASELINE<br />PRESERVED</b>
+        </div>
+      </section>
 
-          <div className="ablation">
-            <header><span>FEATURE ABLATION</span><h3>More inputs did not create more signal.</h3></header>
-            {[["PRICE HISTORY", 1, "-7.60%", "78%"], ["PRICE + OHLCV", 0, "-14.88%", "100%"], ["ALL AVAILABLE", 0, "-14.95%", "100%"]].map(([name, wins, lift, width]) => (
-              <div className="bar-row" key={name}><span>{name}</span><div><i style={{ width }} /></div><b>{wins} / 7</b><em>{lift}</em></div>
-            ))}
-          </div>
-        </section>
+      <section className="ablation section">
+        <header><span className="section-tag">04 / ABLATION LANDSCAPE</span><h2>More inputs.<br />Less evidence.</h2></header>
+        <div className="ablation-lines">
+          <article><span>PRICE HISTORY / 28 FEATURES</span><strong>-7.60%</strong><i><b style={{ width: "51%" }} /></i><small>1 / 7 REGIMES WON</small></article>
+          <article><span>PRICE + OHLCV / 35 FEATURES</span><strong>-14.88%</strong><i><b style={{ width: "99%" }} /></i><small>0 / 7 REGIMES WON</small></article>
+          <article><span>ALL AVAILABLE / 36 FEATURES</span><strong>-14.95%</strong><i><b style={{ width: "100%" }} /></i><small>0 / 7 REGIMES WON</small></article>
+        </div>
+        <p className="ablation-note">Adding contemporaneous market fields did not create stable incremental signal. This is evidence against this candidate—not against every possible Bitcoin forecasting horizon.</p>
+      </section>
 
-        <section className="section legacy">
-          <header className="section-heading"><span>HISTORICAL EVIDENCE / 2019 PRICE-LEVEL BENCHMARK</span><h2>The earlier benchmark reached the same warning.</h2><p>This archived experiment predicts closing-price levels. It is retained as research history, not the current release candidate.</p></header>
-          <div className="table-wrap">
-            <table>
-              <caption>181 holdout predictions / 2019-01-01 to 2019-06-30</caption>
-              <thead><tr><th>Model</th><th>MAE USD</th><th>RMSE USD</th><th>MAPE</th><th>Direction</th></tr></thead>
-              <tbody>{legacy.map((row, rowIndex) => <tr className={rowIndex === 0 ? "best" : ""} key={row[0]}>{row.map((value) => <td key={value}>{value}</td>)}</tr>)}</tbody>
-            </table>
-          </div>
-          <p className="legacy-note"><b>0 / 4 ML MODELS BEAT PERSISTENCE.</b> The old result supports the platform's baseline discipline, but it does not replace the current seven-regime return evaluation.</p>
-        </section>
+      <section className="archive section">
+        <header><span className="section-tag">ARCHIVE / 2019 PRICE-LEVEL STUDY</span><h2>An older experiment left the same warning.</h2><p>181 chronological holdout forecasts. This is historical context, not the current release candidate.</p></header>
+        <div className="archive-table">
+          <div className="archive-head"><span>MODEL</span><span>RMSE USD</span><span>MAE USD</span></div>
+          {legacy.map(([model, rmse, mae], index) => <div className={index === 0 ? "archive-row best" : "archive-row"} key={model}><b>{model}</b><span>{rmse}</span><span>{mae}</span></div>)}
+        </div>
+        <strong className="archive-result">0 / 4 ML MODELS BEAT PERSISTENCE</strong>
+      </section>
 
-        <section className="section" id="system">
-          <header className="section-heading"><span>05 / EVALUATION SYSTEM</span><h2>Evaluation is the product.</h2><p>The platform preserves the temporal boundary, challenges the model and publishes auditable evidence.</p></header>
-          <div className="pipeline">
-            {pipeline.map(([number, title, copy]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}
-          </div>
-          <div className="principles">
-            <article><span>TEMPORAL BOUNDARY</span><strong>Day t information → day t + 1 target</strong></article>
-            <article><span>BASELINE DISCIPLINE</span><strong>Every candidate must earn promotion</strong></article>
-            <article><span>AUDITABILITY</span><strong>Contracts + committed metrics + release policy</strong></article>
-          </div>
-        </section>
+      <section className="method section" id="method">
+        <header><span className="section-tag">05 / METHOD</span><h2>A chain of custody for a forecast.</h2></header>
+        <div className="method-line">
+          {stages.map(([number, title, copy]) => <article key={number}><span>{number}</span><i /><h3>{title}</h3><p>{copy}</p></article>)}
+        </div>
+        <div className="principles">
+          <p><b>TEMPORAL BOUNDARY</b> Day t information → day t + 1 target</p>
+          <p><b>BASELINE DISCIPLINE</b> Every candidate must earn promotion</p>
+          <p><b>AUDITABILITY</b> Contracts + metrics + release policy</p>
+        </div>
+      </section>
 
-        <section className="conclusion" id="conclusion">
-          <span>THE OUTCOME</span><h2>Not a trading signal.<br />A defensible forecasting benchmark.</h2>
-          <p>The project demonstrates why honest evaluation matters more than producing an impressive-looking prediction.</p>
-          <div><b>Leakage-safe features</b><b>Cross-regime testing</b><b>Baseline comparison</b><b>Reproducible evidence</b></div>
-          <a className="button conclusion-button" href="https://github.com/Andy-JunXiong/Bitcoin-Time-Series-Modelling-And-Evaluation">VIEW THE REPOSITORY ↗</a>
-          <small>RESEARCH AND EDUCATIONAL USE ONLY / NOT FINANCIAL ADVICE</small>
-        </section>
-      </div>
+      <section className="closing">
+        <span className="section-tag">FINAL OBSERVATION</span>
+        <h2>The model failed.<br /><em>The evaluation held.</em></h2>
+        <p>Not a trading signal. Not a profitability claim. A defensible record of what the evidence did—and did not—support.</p>
+        <a href="https://github.com/Andy-JunXiong/Bitcoin-Time-Series-Modelling-And-Evaluation">OPEN THE RESEARCH REPOSITORY ↗</a>
+        <small>RESEARCH AND EDUCATIONAL USE ONLY / NOT FINANCIAL ADVICE</small>
+      </section>
     </main>
   );
 }

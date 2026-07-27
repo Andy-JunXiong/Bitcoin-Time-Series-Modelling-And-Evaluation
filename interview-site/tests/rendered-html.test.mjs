@@ -15,9 +15,9 @@ test("server-renders the governed platform case study", async () => {
   assert.match(html, /Bitcoin Forecast Intelligence/);
   assert.match(html, /3,261/);
   assert.match(html, /Candidate rejected/i);
-  assert.match(html, /RESEARCH QUESTIONS/);
-  assert.match(html, /EVALUATION SYSTEM/);
-  assert.match(html, /0 OF 7 REGIMES WON/);
+  assert.match(html, /01 \/ INQUIRY/);
+  assert.match(html, /05 \/ METHOD/);
+  assert.match(html, /0 \/ 7 REGIMES/);
   assert.match(html, /0 \/ 4 ML MODELS BEAT PERSISTENCE/);
 });
 
