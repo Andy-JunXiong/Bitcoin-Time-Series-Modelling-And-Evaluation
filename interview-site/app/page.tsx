@@ -1,7 +1,7 @@
 import benchmark from "../public/evidence/benchmark.json";
 import platform from "../public/evidence/platform-summary.json";
 
-const shortCommit = "__COMMIT_SHA__";
+const shortCommit = process.env.GIT_COMMIT_SHA ?? "__COMMIT_SHA__";
 const repositoryUrl =
   "https://github.com/Andy-JunXiong/Bitcoin-Time-Series-Modelling-And-Evaluation";
 
