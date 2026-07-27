@@ -35,7 +35,7 @@ def build_features(frame: pd.DataFrame) -> pd.DataFrame:
             data["log_return_1d"].shift(1).rolling(window).std()
         )
 
-    for column in (
+    change_candidates = (
         "volume",
         "BCHAIN-DIFF",
         "BCHAIN-AVBLS",
@@ -45,7 +45,8 @@ def build_features(frame: pd.DataFrame) -> pd.DataFrame:
         "BCHAIN-HRATE",
         "BCHAIN-CPT",
         "BCHAIN-NTRBL",
-    ):
+    )
+    for column in (name for name in change_candidates if name in data.columns):
         numeric = data[column].astype(float)
         data[f"{column}_change_1d"] = numeric.pct_change(fill_method=None)
 

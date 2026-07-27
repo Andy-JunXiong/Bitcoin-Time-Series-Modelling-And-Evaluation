@@ -8,3 +8,6 @@ __pycache__/
 .coverage
 htmlcov/
 outputs/predictions/*.csv
+data/raw/market/*.csv
+data/raw/market/*.parquet
+data/raw/market/dataset_manifest.json

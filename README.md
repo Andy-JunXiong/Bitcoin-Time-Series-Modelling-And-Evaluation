@@ -120,6 +120,38 @@ python -m bitcoin_forecasting --quick
 python -m bitcoin_forecasting
 ```
 
+## Refreshing market data
+
+The V2 data pipeline downloads public `BTCUSDT` daily spot candles from Binance's
+market-data-only REST endpoint. Dates use UTC and the current, incomplete UTC day
+is excluded by default. Existing CSV data is updated incrementally.
+
+```bash
+# Download from 2017 through the latest complete UTC day
+python -m bitcoin_forecasting.data_cli update
+
+# Validate continuity and OHLC invariants without downloading
+python -m bitcoin_forecasting.data_cli validate
+
+# Rebuild a bounded historical snapshot
+python -m bitcoin_forecasting.data_cli update --start 2020-01-01 --end 2024-12-31 --full-refresh
+```
+
+The default cache is `data/raw/market/btcusdt_1d.csv`; a versioned
+`dataset_manifest.json` records its source, coverage, and SHA-256 checksum. Use
+`--parquet` to also create a Parquet copy when `pyarrow` is installed. The legacy
+2018–2019 modelling dataset remains supported by the original benchmark command.
+
+The forecasting pipeline accepts both the legacy schema and the refreshed OHLCV
+schema. After updating, run a recent holdout directly with:
+
+```bash
+python -m bitcoin_forecasting \
+  --data data/raw/market/btcusdt_1d.csv \
+  --split-date 2026-01-01 \
+  --quick
+```
+
 Alternatively, `requirements.txt` contains the same runtime and test dependencies for environments that do not install the project as a package; in that case set `PYTHONPATH=src` before invoking the module.
 
 Useful options:
