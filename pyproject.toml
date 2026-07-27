@@ -21,6 +21,7 @@ dev = ["pytest>=7.4,<9"]
 [project.scripts]
 bitcoin-forecast = "bitcoin_forecasting.cli:main"
 bitcoin-data = "bitcoin_forecasting.data_cli:main"
+bitcoin-research = "bitcoin_forecasting.research:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

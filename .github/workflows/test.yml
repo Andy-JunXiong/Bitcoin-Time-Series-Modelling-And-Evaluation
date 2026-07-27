@@ -15,6 +15,7 @@ jobs:
           cache: pip
       - run: python -m pip install -e ".[dev]"
       - run: python -m pytest -q
+      - run: python -m bitcoin_forecasting.research --output-dir /tmp/bitcoin-platform-output
       - run: python -m bitcoin_forecasting --quick --output-dir /tmp/bitcoin-forecast-output
         env:
           PYTHONPATH: src

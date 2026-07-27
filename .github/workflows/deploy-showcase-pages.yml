@@ -1,0 +1,48 @@
+name: Deploy interview showcase to GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "interview-site/**"
+      - "outputs/platform/**"
+      - ".github/workflows/deploy-showcase-pages.yml"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: interview-site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: interview-site/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - run: npm run export:pages
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: interview-site/pages-dist
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

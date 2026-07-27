@@ -39,6 +39,7 @@ dev.stderr.log
 # typescript
 next-env.d.ts
 /dist/
+/pages-dist/
 /.wrangler/
 /outputs/
 /work/

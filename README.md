@@ -1,6 +1,35 @@
 # Bitcoin Next-Day Forecasting
 
+[![Bitcoin Forecast Intelligence — honest baselines across market regimes](interview-site/public/og.png)](https://andy-junxiong.github.io/Bitcoin-Time-Series-Modelling-And-Evaluation/)
+
+<p align="center">
+  <a href="https://andy-junxiong.github.io/Bitcoin-Time-Series-Modelling-And-Evaluation/"><strong>Explore the interactive case study →</strong></a>
+  &nbsp;·&nbsp;
+  <a href="docs/platform-architecture.md">Platform architecture</a>
+  &nbsp;·&nbsp;
+  <a href="docs/model-release-multi-regime.md">Model release evidence</a>
+</p>
+
 A leakage-aware, reproducible benchmark for predicting the next day's Bitcoin closing price from market history and blockchain-network indicators.
+
+## Platform result
+
+The V2 platform extends the original 2019 price benchmark to 3,261 complete UTC
+daily candles from 2017-08-17 through 2026-07-21. A Ridge next-day log-return
+candidate was evaluated across seven declared market regimes and rejected:
+
+| Release evidence | Result |
+| --- | ---: |
+| Dataset coverage | **3,261 daily candles** |
+| Declared market regimes | **7** |
+| Candidate wins over zero-return baseline | **0/7** |
+| Mean RMSE improvement | **-14.88%** |
+| Mean direction accuracy | **50.63%** |
+| Release decision | **Rejected — baseline preserved** |
+
+This negative result is governed evidence, not a hidden failed experiment. Run
+`python -m bitcoin_forecasting.research` to reproduce the regime benchmark,
+feature ablation, release decision, CSV evidence, and charts.
 
 The project compares a persistence baseline with regularized linear models and tree ensembles under a strict expanding-window evaluation. It also preserves the original 2019 research notebooks for historical reference.
 
