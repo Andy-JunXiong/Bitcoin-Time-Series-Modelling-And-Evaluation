@@ -11,7 +11,6 @@ test("standalone showcase embeds its presentation assets", async () => {
   assert.match(html, /Bitcoin Forecast Intelligence/);
   assert.match(html, /Candidate rejected/i);
   assert.match(html, /<style>/);
-  assert.match(html, /data:image\/png;base64,/);
   assert.match(html, /data:image\/svg\+xml;base64,/);
   assert.doesNotMatch(html, /<script\b/i);
   assert.doesNotMatch(html, /(?:src|href)="\.?\//i);

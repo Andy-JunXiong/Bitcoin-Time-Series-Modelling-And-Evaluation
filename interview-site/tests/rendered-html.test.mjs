@@ -15,8 +15,10 @@ test("server-renders the governed platform case study", async () => {
   assert.match(html, /Bitcoin Forecast Intelligence/);
   assert.match(html, /3,261/);
   assert.match(html, /Candidate rejected/i);
-  assert.match(html, /DECISION QUESTIONS/);
-  assert.match(html, /PRODUCTION SYSTEM/);
+  assert.match(html, /RESEARCH QUESTIONS/);
+  assert.match(html, /EVALUATION SYSTEM/);
+  assert.match(html, /0 OF 7 REGIMES WON/);
+  assert.match(html, /0 \/ 4 ML MODELS BEAT PERSISTENCE/);
 });
 
 test("ships production metadata and generated evidence", async () => {
@@ -26,6 +28,6 @@ test("ships production metadata and generated evidence", async () => {
   assert.doesNotMatch(html, /codex-preview/);
   assert.match(html, /property="og:image"/);
   assert.match(html, /\/og\.png/);
-  assert.match(html, /\/figures\/regime-comparison\.png/);
-  assert.match(html, /\/figures\/feature-ablation\.png/);
+  assert.match(html, /NOT FINANCIAL ADVICE/);
+  assert.doesNotMatch(html, /\bBUY\b|\bSELL\b|\bHOLD\b/);
 });
