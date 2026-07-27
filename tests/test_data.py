@@ -39,3 +39,21 @@ def test_invalid_split_is_rejected():
     featured = build_features(load_dataset(DATASET))
     with pytest.raises(ValueError):
         chronological_split(featured, "2010-01-01")
+
+
+def test_v2_ohlcv_schema_builds_features(tmp_path):
+    dates = pd.date_range("2020-01-01", periods=45, freq="D")
+    path = tmp_path / "market.csv"
+    pd.DataFrame(
+        {
+            "date": dates.strftime("%Y-%m-%d"),
+            "open": range(100, 145),
+            "high": range(105, 150),
+            "low": range(95, 140),
+            "close": range(101, 146),
+            "volume": range(1000, 1045),
+        }
+    ).to_csv(path, index=False)
+    featured = build_features(load_dataset(path))
+    assert not featured.empty
+    assert {"open", "high", "low", "target_log_return"}.issubset(featured.columns)
