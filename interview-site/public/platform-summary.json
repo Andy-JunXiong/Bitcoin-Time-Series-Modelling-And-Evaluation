@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "row_count": 3261,
+    "start_date": "2017-08-17",
+    "end_date": "2026-07-21",
+    "feature_row_count": 3229
+  },
+  "experiment": {
+    "target": "next_day_log_return",
+    "candidate": "ridge_alpha_10",
+    "baseline": "zero_return",
+    "validation": "declared expanding-history market regimes",
+    "feature_group": "ohlcv"
+  },
+  "regimes": [
+    {
+      "regime": "2018_bear",
+      "label": "2018 bear market",
+      "start_date": "2018-03-01",
+      "end_date": "2018-12-31",
+      "n_train": 164,
+      "n_test": 306,
+      "baseline_rmse_bps": 370.1771501599274,
+      "candidate_rmse_bps": 500.96014227173293,
+      "rmse_improvement_percent": -35.32983925542228,
+      "baseline_mae_bps": 261.5178242093894,
+      "candidate_mae_bps": 383.5017364751284,
+      "direction_accuracy_percent": 50.0,
+      "candidate_won": false
+    },
+    {
+      "regime": "2020_shock",
+      "label": "2020 shock & recovery",
+      "start_date": "2020-01-01",
+      "end_date": "2020-12-31",
+      "n_train": 835,
+      "n_test": 366,
+      "baseline_rmse_bps": 424.8409721070415,
+      "candidate_rmse_bps": 445.33004214561345,
+      "rmse_improvement_percent": -4.822762253121282,
+      "baseline_mae_bps": 244.8675956737484,
+      "candidate_mae_bps": 261.173575708192,
+      "direction_accuracy_percent": 50.27322404371585,
+      "candidate_won": false
+    },
+    {
+      "regime": "2021_bull",
+      "label": "2021 bull market",
+      "start_date": "2021-01-01",
+      "end_date": "2021-12-31",
+      "n_train": 1201,
+      "n_test": 365,
+      "baseline_rmse_bps": 423.20550368037937,
+      "candidate_rmse_bps": 609.2124705730837,
+      "rmse_improvement_percent": -43.95192531172367,
+      "baseline_mae_bps": 314.18760935909074,
+      "candidate_mae_bps": 495.5054186174106,
+      "direction_accuracy_percent": 50.136986301369866,
+      "candidate_won": false
+    },
+    {
+      "regime": "2022_bear",
+      "label": "2022 deleveraging",
+      "start_date": "2022-01-01",
+      "end_date": "2022-12-31",
+      "n_train": 1566,
+      "n_test": 365,
+      "baseline_rmse_bps": 337.83917405009663,
+      "candidate_rmse_bps": 383.3483687301355,
+      "rmse_improvement_percent": -13.47066834626187,
+      "baseline_mae_bps": 227.501427627646,
+      "candidate_mae_bps": 282.4287899532179,
+      "direction_accuracy_percent": 48.76712328767123,
+      "candidate_won": false
+    },
+    {
+      "regime": "2023_recovery",
+      "label": "2023 recovery",
+      "start_date": "2023-01-01",
+      "end_date": "2023-12-31",
+      "n_train": 1931,
+      "n_test": 365,
+      "baseline_rmse_bps": 229.18668298663576,
+      "candidate_rmse_bps": 233.86601204440873,
+      "rmse_improvement_percent": -2.041710712330458,
+      "baseline_mae_bps": 153.33283832090845,
+      "candidate_mae_bps": 155.8797640938222,
+      "direction_accuracy_percent": 52.87671232876713,
+      "candidate_won": false
+    },
+    {
+      "regime": "2024_institutional",
+      "label": "2024 institutional cycle",
+      "start_date": "2024-01-01",
+      "end_date": "2024-12-31",
+      "n_train": 2296,
+      "n_test": 366,
+      "baseline_rmse_bps": 276.2108216167683,
+      "candidate_rmse_bps": 281.94206152406156,
+      "rmse_improvement_percent": -2.0749512541710313,
+      "baseline_mae_bps": 200.52061536467357,
+      "candidate_mae_bps": 203.38415814825018,
+      "direction_accuracy_percent": 51.36612021857923,
+      "candidate_won": false
+    },
+    {
+      "regime": "2025_recent",
+      "label": "2025 recent market",
+      "start_date": "2025-01-01",
+      "end_date": "2025-12-31",
+      "n_train": 2662,
+      "n_test": 365,
+      "baseline_rmse_bps": 217.83675141710876,
+      "candidate_rmse_bps": 223.27680404713004,
+      "rmse_improvement_percent": -2.497307086445111,
+      "baseline_mae_bps": 156.37071625095157,
+      "candidate_mae_bps": 164.6539281831492,
+      "direction_accuracy_percent": 50.95890410958904,
+      "candidate_won": false
+    }
+  ],
+  "ablation": [
+    {
+      "feature_group": "price_history",
+      "feature_count": 28,
+      "folds_won": 1,
+      "folds_total": 7,
+      "mean_candidate_rmse_bps": 355.624315577762,
+      "mean_rmse_improvement_percent": -7.604779662085128,
+      "mean_direction_accuracy_percent": 49.78090075763818
+    },
+    {
+      "feature_group": "ohlcv",
+      "feature_count": 35,
+      "folds_won": 0,
+      "folds_total": 7,
+      "mean_candidate_rmse_bps": 382.56227161945225,
+      "mean_rmse_improvement_percent": -14.884166317067956,
+      "mean_direction_accuracy_percent": 50.625581469956046
+    },
+    {
+      "feature_group": "full",
+      "feature_count": 36,
+      "folds_won": 0,
+      "folds_total": 7,
+      "mean_candidate_rmse_bps": 382.84899636517036,
+      "mean_rmse_improvement_percent": -14.952535519915063,
+      "mean_direction_accuracy_percent": 50.66472041320458
+    }
+  ],
+  "release_gate": {
+    "status": "rejected",
+    "candidate": "ridge_log_return",
+    "baseline": "zero_return",
+    "folds_won": 0,
+    "folds_total": 7,
+    "required_folds_won": 5,
+    "mean_rmse_improvement_percent": -14.884166317067956,
+    "mean_direction_accuracy_percent": 50.625581469956046,
+    "rules": [
+      "Candidate must beat zero-return RMSE in at least 60% of regimes.",
+      "Mean RMSE improvement across regimes must be positive."
+    ]
+  }
+}

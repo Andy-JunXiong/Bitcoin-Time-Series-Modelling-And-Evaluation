@@ -1,94 +1,239 @@
-# Bitcoin Next-Day Forecasting
+# Bitcoin Forecast Intelligence Platform
 
-A leakage-aware, reproducible benchmark for predicting the next day's Bitcoin closing price from market history and blockchain-network indicators.
+A reproducible time-series research platform that turns governed Bitcoin market
+history into leakage-safe features, cross-regime model evidence, explicit release
+decisions, and an interview-ready interactive case study.
 
-The project compares a persistence baseline with regularized linear models and tree ensembles under a strict expanding-window evaluation. It also preserves the original 2019 research notebooks for historical reference.
+[![Bitcoin Forecast Intelligence — the model failed, the platform succeeded](interview-site/public/og.png)](https://andy-junxiong.github.io/Bitcoin-Time-Series-Modelling-And-Evaluation/)
 
-## Headline result
+<p align="center">
+  <a href="https://andy-junxiong.github.io/Bitcoin-Time-Series-Modelling-And-Evaluation/"><strong>Explore the interactive case study →</strong></a>
+  &nbsp;·&nbsp;
+  <a href="docs/platform-architecture.md">Platform architecture</a>
+  &nbsp;·&nbsp;
+  <a href="docs/model-release-multi-regime.md">Model release evidence</a>
+</p>
 
-**None of the machine-learning models beat the naive baseline on holdout RMSE.** This is the central finding—not a hidden failed experiment. Bitcoin's price persistence makes “tomorrow equals today” a strong baseline, and a model should not be considered useful unless it improves on it out of sample.
+> The platform is a research and model-governance case study. It is not a
+> trading system, investment recommendation, profitability claim, or live
+> portfolio-allocation service.
+
+## Results at a glance
+
+| Platform evidence | Result |
+| --- | ---: |
+| Governed market coverage | **3,261 complete UTC days** |
+| Coverage period | **2017-08-17 → 2026-07-21** |
+| Leakage-safe feature rows | **3,229** |
+| Declared market regimes | **7** |
+| Candidate wins over zero-return baseline | **0/7** |
+| Mean candidate RMSE improvement | **-14.88%** |
+| Mean direction accuracy | **50.63%** |
+| Release decision | **Rejected — baseline preserved** |
+| Automated Python tests | **13/13 passed** |
+
+The negative result is intentional first-class evidence. The Ridge next-day
+log-return candidate did not earn promotion, so the versioned release gate
+rejected it and retained the zero-return baseline.
+
+## What the platform does
+
+```text
+Binance complete UTC candles
+        ↓
+Raw market cache + SHA-256 manifest
+        ↓
+Validated daily market contract
+        ↓
+Leakage-safe feature snapshot
+        ↓
+Seven expanding-history regime backtests
+        ↓
+Feature ablation + model release gate
+        ↓
+Candidate rejected or promoted by policy
+```
+
+- Downloads bounded `BTCUSDT` daily candles with incremental updates.
+- Excludes the current incomplete UTC day.
+- Validates continuity, uniqueness, numeric values, and OHLC invariants.
+- Records source coverage and a SHA-256 checksum in a dataset manifest.
+- Builds day-`t` features that predict day `t+1` without future leakage.
+- Evaluates a stationary next-day log-return target across named market regimes.
+- Compares the candidate against an auditable zero-return baseline.
+- Measures whether price history, OHLCV, or all available features add value.
+- Applies a versioned promotion policy and preserves the baseline on failure.
+- Generates machine-readable evidence, charts, documentation, and a portfolio site.
+
+## Decision boundary
+
+The platform answers:
+
+- Is the daily source history complete and contract-valid?
+- Does a return model beat a zero-return baseline across different regimes?
+- Do additional OHLCV inputs improve on price-history-only features?
+- Is the evidence strong enough to promote a candidate?
+
+It does not:
+
+- recommend buying, selling, or holding Bitcoin;
+- model transaction costs, leverage, liquidity, or portfolio constraints;
+- claim causal relationships between features and returns;
+- guarantee that other horizons, sources, or model classes cannot work;
+- publish an unapproved candidate as a production forecast.
+
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| [`src/bitcoin_forecasting/`](src/bitcoin_forecasting/) | Data loading, validation, feature engineering, modelling, evaluation, and reporting |
+| [`src/bitcoin_forecasting/research.py`](src/bitcoin_forecasting/research.py) | Cross-regime return benchmark, ablation, and release decision |
+| [`contracts/`](contracts/) | Versioned daily-market data contract |
+| [`governance/`](governance/) | Candidate promotion policy and failure behavior |
+| [`docs/`](docs/) | Platform architecture and model-release evidence |
+| [`outputs/platform/`](outputs/platform/) | Committed multi-regime metrics, ablation evidence, and figures |
+| [`interview-site/`](interview-site/) | Interactive portfolio case study and social preview |
+| [`tests/`](tests/) | Data, leakage, evaluation, market-download, and release-gate tests |
+| [`Data/`](Data/) | Original research data and historical source files |
+| [`Data Processing/`](Data%20Processing/) | Preserved exploratory notebooks and scripts |
+| [`Models/`](Models/) | Preserved historical model experiments |
+
+## Governed market data
+
+The V2 data pipeline uses public Binance `BTCUSDT` daily spot candles. Dates are
+UTC, and the current incomplete UTC day is excluded by default.
+
+```bash
+# Download from the requested start through the latest complete UTC day
+python -m bitcoin_forecasting.data_cli update
+
+# Validate an existing market cache without downloading
+python -m bitcoin_forecasting.data_cli validate
+
+# Rebuild a bounded historical snapshot
+python -m bitcoin_forecasting.data_cli update \
+  --start 2020-01-01 \
+  --end 2024-12-31 \
+  --full-refresh
+```
+
+The default local cache is:
+
+```text
+data/raw/market/
+├── btcusdt_1d.csv
+└── dataset_manifest.json
+```
+
+The CSV and optional Parquet files are intentionally ignored by Git. The
+manifest records source, symbol, interval, timezone, coverage, row count, and
+SHA-256 checksum. CI uses deterministic synthetic fixtures rather than relying
+on a mutable external download.
+
+The governing schema and invariants are declared in
+[`contracts/market_daily.v1.json`](contracts/market_daily.v1.json).
+
+## Leakage-safe feature product
+
+For each row at day `t`, the platform predicts:
+
+```text
+target_log_return = log(close[t+1] / close[t])
+```
+
+Available feature families include:
+
+- 1-, 2-, 3-, 7-, 14-, and 30-day price and return lags;
+- 3-, 7-, 14-, and 30-day rolling price means and volatility;
+- lagged return volatility;
+- open, high, low, close, base volume, quote volume, and trade count;
+- daily volume change;
+- day-of-week and month.
+
+Rolling statistics are shifted before calculation. No predictor uses a negative
+shift, target value, target date, or future-derived aggregate.
+
+## Cross-regime model evidence
+
+Run the governed research workflow with:
+
+```bash
+python -m bitcoin_forecasting.research
+```
+
+The candidate is a standardized Ridge model with `alpha=10`. The baseline
+predicts zero next-day log return. Each fold fits on all feature rows strictly
+before the declared regime.
+
+| Regime | Baseline RMSE | Candidate RMSE | Improvement | Direction accuracy |
+| --- | ---: | ---: | ---: | ---: |
+| 2018 bear market | 370.2 bps | 501.0 bps | -35.3% | 50.00% |
+| 2020 shock and recovery | 424.8 bps | 445.3 bps | -4.8% | 50.27% |
+| 2021 bull market | 423.2 bps | 609.2 bps | -44.0% | 50.14% |
+| 2022 deleveraging | 337.8 bps | 383.3 bps | -13.5% | 48.77% |
+| 2023 recovery | 229.2 bps | 233.9 bps | -2.0% | 52.88% |
+| 2024 institutional cycle | 276.2 bps | 281.9 bps | -2.1% | 51.37% |
+| 2025 recent market | 217.8 bps | 223.3 bps | -2.5% | 50.96% |
+
+![Cross-regime return benchmark](outputs/platform/figures/regime_comparison.png)
+
+## Feature ablation
+
+The ablation asks whether adding more contemporaneous market fields creates
+stable incremental signal.
+
+| Feature group | Features | Regimes won | Mean RMSE improvement |
+| --- | ---: | ---: | ---: |
+| Price history | 28 | 1/7 | -7.60% |
+| Price + OHLCV | 35 | 0/7 | -14.88% |
+| All available | 36 | 0/7 | -14.95% |
+
+![Feature-group ablation](outputs/platform/figures/feature_ablation.png)
+
+Price history alone lost less badly than the larger feature groups. The result
+does not support promoting the current OHLCV candidate.
+
+## Model release gate
+
+The promotion policy requires:
+
+1. candidate RMSE must beat the zero-return baseline in at least 60% of regimes;
+2. mean RMSE improvement across all declared regimes must be positive.
+
+Observed evidence:
+
+```text
+required regime wins: 5 / 7
+observed regime wins: 0 / 7
+mean RMSE improvement: -14.88%
+decision: REJECTED
+baseline: PRESERVED
+```
+
+The versioned policy is stored in
+[`governance/return_model_release_policy.json`](governance/return_model_release_policy.json).
+The dated interpretation is documented in
+[`docs/model-release-multi-regime.md`](docs/model-release-multi-regime.md).
+
+## Original price-level benchmark
+
+The modern platform preserves the earlier 2019 next-day closing-price benchmark
+as historical evidence.
 
 | Model | MAE (USD) | RMSE (USD) | MAPE | Direction accuracy |
 | --- | ---: | ---: | ---: | ---: |
-| **Naive persistence** | **154.06** | **296.00** | **2.24%** | 0.00%¹ |
+| **Naive persistence** | **154.06** | **296.00** | **2.24%** | 0.00% |
 | Random Forest | 180.98 | 305.13 | 2.84% | 46.41% |
 | Histogram Gradient Boosting | 182.30 | 310.09 | 2.81% | 50.83% |
 | Ridge | 189.20 | 311.05 | 3.14% | **51.38%** |
 | Elastic Net | 193.13 | 316.67 | 3.15% | 49.17% |
 
-¹ The persistence baseline predicts zero movement, so it receives no correct up/down classifications under the strict sign metric.
+The persistence baseline predicts no movement, so it receives no correct
+up/down classifications under the strict sign metric. None of the machine
+learning models beat persistence on holdout RMSE.
 
-These results use 181 daily holdout predictions from 2019-01-01 through 2019-06-30. Hyperparameters are selected only from the earlier training period. The committed machine-readable results are in [`outputs/metrics/benchmark.json`](outputs/metrics/benchmark.json).
-
-![Model RMSE comparison](outputs/figures/model_comparison.png)
-
-![Walk-forward predictions](outputs/figures/predictions.png)
-
-## Why this project is technically interesting
-
-- **A real baseline:** every model must beat a one-step persistence forecast.
-- **No random train/test split:** samples remain in chronological order.
-- **Causal features:** a row built from information available on day `t` predicts the close on day `t+1`.
-- **Training-only tuning:** `TimeSeriesSplit` selects hyperparameters without exposing the final holdout period.
-- **Walk-forward testing:** models are refitted as each newly observed test value becomes available.
-- **Reproducible outputs:** one command generates metrics, dated predictions, and portfolio-ready charts.
-- **Automated safeguards:** tests check data integrity, next-day target alignment, temporal separation, and evaluation behavior.
-
-## Problem definition
-
-For every date `t`, the benchmark uses price, volume, blockchain indicators, and lagged/rolling transformations known by the end of that date to estimate:
-
-```text
-target = Bitcoin closing price on day t + 1
-```
-
-The data is split by the date being predicted:
-
-```text
-feature history           holdout predictions
-2018-01-01 ... 2018-12-31 | 2019-01-01 ... 2019-06-30
-                          ^ split date
-```
-
-The early observations needed to initialize 30-day rolling features are discarded automatically.
-
-## Data and features
-
-The main modelling file, [`Data/Data_after_EDA.csv`](Data/Data_after_EDA.csv), contains 546 daily observations from 2018-01-01 to 2019-06-30 with no duplicate dates or missing values.
-
-Original variables include:
-
-- Bitcoin closing price and trading volume;
-- mining difficulty and hash rate;
-- average block size;
-- miners' revenue;
-- transaction counts and transactions per block;
-- cost-per-transaction measures.
-
-The modern pipeline derives:
-
-- 1-, 2-, 3-, 7-, 14-, and 30-day price and return lags;
-- 3-, 7-, 14-, and 30-day rolling means and volatility;
-- daily volume and blockchain-indicator changes;
-- day-of-week and month features.
-
-All rolling statistics are shifted before calculation. This prevents the target day from leaking into its predictors.
-
-See [`Data/`](Data/) for the combined historical files, original spreadsheets, and dataset description. Data provenance and reuse rights should be independently verified before publishing derivative datasets or using them in new research.
-
-## Models
-
-The reproducible benchmark includes:
-
-| Model | Role | Tuning |
-| --- | --- | --- |
-| Naive persistence | Minimum credible baseline | None |
-| Ridge | Stable regularized linear model | L2 strength |
-| Elastic Net | Sparse/regularized linear model | Alpha and L1 ratio |
-| Random Forest | Non-linear bagged trees | Depth and feature fraction |
-| Histogram Gradient Boosting | Non-linear boosted trees | Learning rate and leaf count |
-
-The compact grids are intentional: the dataset is small, and broad searches would increase selection noise without creating more evidence.
+These results use 181 holdout predictions from 2019-01-01 through 2019-06-30.
+Hyperparameters are selected only from the earlier training period.
 
 ## Quick start
 
@@ -113,58 +258,30 @@ Install and run:
 ```bash
 python -m pip install -e ".[dev]"
 
-# Fast smoke run: baseline + Ridge
+# Validate the test suite
+python -m pytest -q
+
+# Run the original baseline + Ridge smoke benchmark
 python -m bitcoin_forecasting --quick
 
-# Full benchmark
+# Run the full original price benchmark
 python -m bitcoin_forecasting
+
+# Generate cross-regime evidence and the release decision
+python -m bitcoin_forecasting.research
 ```
 
-## Refreshing market data
-
-The V2 data pipeline downloads public `BTCUSDT` daily spot candles from Binance's
-market-data-only REST endpoint. Dates use UTC and the current, incomplete UTC day
-is excluded by default. Existing CSV data is updated incrementally.
+Installed command aliases:
 
 ```bash
-# Download from 2017 through the latest complete UTC day
-python -m bitcoin_forecasting.data_cli update
-
-# Validate continuity and OHLC invariants without downloading
-python -m bitcoin_forecasting.data_cli validate
-
-# Rebuild a bounded historical snapshot
-python -m bitcoin_forecasting.data_cli update --start 2020-01-01 --end 2024-12-31 --full-refresh
-```
-
-The default cache is `data/raw/market/btcusdt_1d.csv`; a versioned
-`dataset_manifest.json` records its source, coverage, and SHA-256 checksum. Use
-`--parquet` to also create a Parquet copy when `pyarrow` is installed. The legacy
-2018–2019 modelling dataset remains supported by the original benchmark command.
-
-The forecasting pipeline accepts both the legacy schema and the refreshed OHLCV
-schema. After updating, run a recent holdout directly with:
-
-```bash
-python -m bitcoin_forecasting \
-  --data data/raw/market/btcusdt_1d.csv \
-  --split-date 2026-01-01 \
-  --quick
-```
-
-Alternatively, `requirements.txt` contains the same runtime and test dependencies for environments that do not install the project as a package; in that case set `PYTHONPATH=src` before invoking the module.
-
-Useful options:
-
-```bash
-python -m bitcoin_forecasting --help
-python -m bitcoin_forecasting --models ridge random_forest
-python -m bitcoin_forecasting --split-date 2019-01-01 --output-dir outputs
+bitcoin-data validate
+bitcoin-forecast --quick
+bitcoin-research
 ```
 
 ## Generated artifacts
 
-Each run creates:
+The original price benchmark writes:
 
 ```text
 outputs/
@@ -175,50 +292,78 @@ outputs/
     └── predictions.png
 ```
 
-Prediction CSVs include `target_date`, the previous close, actual close, and forecast, which makes every score auditable.
+The platform research workflow writes:
 
-## Testing
+```text
+outputs/platform/
+├── platform_summary.json
+├── regime_metrics.csv
+├── regime_predictions.csv
+├── ablation.csv
+└── figures/
+    ├── regime_comparison.png
+    └── feature_ablation.png
+```
+
+Detailed prediction files are ignored by Git to avoid noisy diffs. Compact
+metrics, release evidence, and final figures are committed for auditability.
+
+## Testing and continuous delivery
 
 ```bash
 python -m pytest -q
 ```
 
-The current suite contains six tests covering:
+The suite covers:
 
-- required columns, missing values, date ordering, and duplicates;
-- exact alignment of day-`t` predictors with the day-`t+1` target;
-- non-overlapping chronological train/test periods;
-- invalid split rejection;
-- persistence-baseline behavior;
-- expanding-window prediction behavior.
+- required columns, missing values, ordering, and duplicate dates;
+- exact day-`t` to day-`t+1` target alignment;
+- chronological train/test separation;
+- persistence-baseline and expanding-window behavior;
+- complete-day market-data handling and pagination;
+- daily continuity and OHLC validation;
+- V2 OHLCV feature generation;
+- nested feature-ablation groups;
+- cross-regime training boundaries;
+- explicit release-gate decisions.
 
-GitHub Actions runs the tests and a quick end-to-end training smoke test on each push and pull request.
+GitHub Actions runs all Python tests and a quick end-to-end training smoke test
+on pushes and pull requests. A separate workflow builds and publishes the
+interactive case study to GitHub Pages.
 
-## Project structure
+## Interactive portfolio case study
 
-```text
-.
-├── src/bitcoin_forecasting/
-│   ├── data.py          # loading, validation, chronological split
-│   ├── features.py      # causal lag and rolling features
-│   ├── models.py        # reproducible estimators and search grids
-│   ├── evaluation.py    # tuning, walk-forward evaluation, metrics
-│   ├── reporting.py     # JSON, CSV, and chart generation
-│   └── cli.py           # command-line workflow
-├── tests/               # data and evaluation safeguards
-├── outputs/             # benchmark results and figures
-├── Data/                # source and processed datasets
-├── Data Processing/     # original exploratory notebooks
-├── Models/              # original model notebooks
-├── pyproject.toml
-└── requirements.txt
-```
+The public presentation is available at:
 
-## Legacy experiments
+**[andy-junxiong.github.io/Bitcoin-Time-Series-Modelling-And-Evaluation](https://andy-junxiong.github.io/Bitcoin-Time-Series-Modelling-And-Evaluation/)**
 
-The original notebooks cover EDA, ARIMA, Bayesian Ridge, Ridge, Lasso, Elastic Net, SVR, decision trees, MLP, LSTM, and GRU. They are retained to show the research history, but they are not part of the supported execution path.
+The case study presents:
 
-Notable limitations in the archived work include absolute paths, missing `Functions_1.py` and `LSTM_Dataset.csv`, obsolete library APIs, inconsistent evaluation windows, and incomplete exploratory notebooks. The modern `src/` pipeline replaces those fragile execution paths while preserving the source material.
+- decision questions rather than a chart gallery;
+- governed source and feature evidence;
+- all seven regime results;
+- feature ablation;
+- the failed-candidate story;
+- the release gate and preserved baseline;
+- the end-to-end platform architecture.
+
+The implementation lives in [`interview-site/`](interview-site/) and is
+automatically deployed by
+[`.github/workflows/deploy-showcase-pages.yml`](.github/workflows/deploy-showcase-pages.yml).
+
+## Legacy research
+
+The original notebooks cover EDA, ARIMA, Bayesian Ridge, Ridge, Lasso, Elastic
+Net, SVR, decision trees, MLP, LSTM, and GRU. They are retained as historical
+research evidence but are not part of the supported execution path.
+
+Known limitations in the archived work include:
+
+- absolute local paths;
+- missing historical helper files and datasets;
+- obsolete library APIs;
+- inconsistent evaluation windows;
+- incomplete exploratory notebooks.
 
 Recommended historical entry points:
 
@@ -227,18 +372,34 @@ Recommended historical entry points:
 - [`Models/Ridge.ipynb`](Models/Ridge.ipynb)
 - [`Models/Deep_Learning.ipynb`](Models/Deep_Learning.ipynb)
 
-## Interpretation and next steps
+## Methodological limitations
 
-The benchmark suggests that the available daily blockchain indicators and engineered historical features do not produce a robust RMSE improvement over price persistence during this holdout period. Ridge slightly exceeds chance on direction, but that result alone is not evidence of a profitable strategy.
+- Binance spot history represents one venue and one `BTCUSDT` market.
+- Daily bars hide intraday structure, order-book state, and execution conditions.
+- Regime labels are declared research windows, not causal market-state estimates.
+- The current candidate uses compact engineered features and a single linear model.
+- Direction accuracy near 50% is not evidence of economic value.
+- No transaction costs, slippage, position sizing, or capital constraints are modelled.
+- The platform does not yet produce calibrated prediction intervals.
+- The source dataset and provider terms should be reviewed independently before redistribution.
 
-Useful next experiments would be:
+## Suggested next steps
 
-1. predict next-day log return rather than the non-stationary price level;
-2. repeat evaluation across multiple market regimes instead of one six-month holdout;
-3. test whether blockchain features add value over a price-history-only ablation;
-4. add transaction costs and a no-trade threshold before discussing strategy performance;
-5. quantify uncertainty with prediction intervals.
+- evaluate weekly and multi-day forecast horizons;
+- add externally sourced macro, derivatives, and blockchain features;
+- introduce conformal or quantile prediction intervals;
+- compare candidates using nested time-aware model selection;
+- add transaction-cost-aware decision thresholds;
+- close the loop with forecast-to-actual monitoring and immutable release archives.
 
 ## Disclaimer
 
-This project is for educational and research purposes only. Its forecasts are not financial advice and should not be used as the sole basis for trading or investment decisions.
+This project is for educational and research purposes only. Its forecasts,
+metrics, and visualizations are not financial advice and should not be used as
+the sole basis for investment or trading decisions.
+
+## License
+
+No license file is currently included. Unless a license is added, the code and
+written material remain under default copyright terms. External source data is
+governed separately by its provider.

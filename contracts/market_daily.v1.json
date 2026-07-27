@@ -1,0 +1,22 @@
+{
+  "contract": "bitcoin-market-daily",
+  "version": 1,
+  "grain": "symbol × complete UTC day",
+  "source": "Binance Spot BTCUSDT",
+  "required_columns": {
+    "date": "ISO-8601 UTC calendar date",
+    "open": "positive number",
+    "high": "positive number; >= open, low, close",
+    "low": "positive number; <= open, high, close",
+    "close": "positive number",
+    "volume": "non-negative base-asset volume",
+    "quote_volume": "non-negative quote-asset volume",
+    "trade_count": "non-negative integer"
+  },
+  "invariants": [
+    "One row per complete UTC day",
+    "No duplicate or missing dates",
+    "The current incomplete UTC day is excluded",
+    "Every published CSV has a SHA-256 manifest"
+  ]
+}

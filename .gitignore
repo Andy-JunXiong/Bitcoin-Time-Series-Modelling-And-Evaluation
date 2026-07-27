@@ -1,4 +1,5 @@
 .venv/
+.venv*/
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -8,6 +9,7 @@ __pycache__/
 .coverage
 htmlcov/
 outputs/predictions/*.csv
+outputs/platform/regime_predictions.csv
 data/raw/market/*.csv
 data/raw/market/*.parquet
 data/raw/market/dataset_manifest.json

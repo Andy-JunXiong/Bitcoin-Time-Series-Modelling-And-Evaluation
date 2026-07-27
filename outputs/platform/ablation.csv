@@ -1,0 +1,4 @@
+feature_group,feature_count,folds_won,folds_total,mean_candidate_rmse_bps,mean_rmse_improvement_percent,mean_direction_accuracy_percent
+price_history,28,1,7,355.624315577762,-7.604779662085128,49.78090075763818
+ohlcv,35,0,7,382.56227161945225,-14.884166317067956,50.625581469956046
+full,36,0,7,382.84899636517036,-14.952535519915063,50.66472041320458

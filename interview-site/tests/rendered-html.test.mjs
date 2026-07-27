@@ -7,26 +7,27 @@ async function render(pathname = "/") {
   return worker.fetch(new Request(`http://localhost:3000${pathname}`));
 }
 
-test("server-renders the interview portfolio", async () => {
+test("server-renders the governed platform case study", async () => {
   const response = await render();
   const html = await response.text();
 
   assert.equal(response.status, 200);
-  assert.match(html, /Bitcoin Forecast Lab/);
-  assert.match(html, /Can machine learning/);
-  assert.match(html, /296/);
-  assert.match(html, /None of the ML models won/);
-  assert.match(html, /MODEL LEADERBOARD/);
-  assert.match(html, /Designed against hindsight/);
+  assert.match(html, /Bitcoin Forecast Intelligence/);
+  assert.match(html, /3,261/);
+  assert.match(html, /Candidate rejected/i);
+  assert.match(html, /RESEARCH QUESTIONS/);
+  assert.match(html, /EVALUATION SYSTEM/);
+  assert.match(html, /0 OF 7 REGIMES WON/);
+  assert.match(html, /0 \/ 4 ML MODELS BEAT PERSISTENCE/);
 });
 
-test("ships production metadata and assets", async () => {
+test("ships production metadata and generated evidence", async () => {
   const response = await render();
   const html = await response.text();
 
   assert.doesNotMatch(html, /codex-preview/);
   assert.match(html, /property="og:image"/);
   assert.match(html, /\/og\.png/);
-  assert.match(html, /\/figures\/model-comparison\.png/);
-  assert.match(html, /\/figures\/predictions\.png/);
+  assert.match(html, /NOT FINANCIAL ADVICE/);
+  assert.doesNotMatch(html, /\bBUY\b|\bSELL\b|\bHOLD\b/);
 });

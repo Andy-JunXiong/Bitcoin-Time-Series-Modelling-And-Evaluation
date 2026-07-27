@@ -1,0 +1,17 @@
+{
+  "policy": "next-day-return-candidate-promotion",
+  "version": 1,
+  "candidate": "ridge_log_return",
+  "baseline": "zero_return",
+  "required_evidence": [
+    "Declared expanding-history market regimes",
+    "No target or future-derived feature columns",
+    "Feature-group ablation",
+    "Machine-readable predictions and metrics"
+  ],
+  "promotion_rules": {
+    "minimum_regime_win_rate": 0.6,
+    "minimum_mean_rmse_improvement_percent": 0.0
+  },
+  "failure_behavior": "Reject the candidate and preserve the baseline as the production reference."
+}
