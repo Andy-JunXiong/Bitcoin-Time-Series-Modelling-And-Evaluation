@@ -30,11 +30,12 @@ metadata.
 
 ```bash
 npm run build
-npm run export:html
+npm run export:single-html
 ```
 
-The static presentation is written to `html-dist/`. Keep `index.html` and its
-asset folders together when copying or uploading the presentation.
+The result is `bitcoin-forecast-intelligence.html`: one standalone file with
+the production CSS, charts, social icon, and page content embedded. It can be
+opened directly or renamed to `index.html` for static hosting.
 
 ## Evidence inputs
 

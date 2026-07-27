@@ -5,8 +5,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "interview-site/**"
-      - "outputs/platform/**"
+      - "interview-site/bitcoin-forecast-intelligence.html"
       - ".github/workflows/deploy-showcase-pages.yml"
 
 permissions:
@@ -24,25 +23,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: interview-site
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-          cache-dependency-path: interview-site/package-lock.json
-      - run: npm ci
-      - run: npm run build
-      - run: npm run export:pages
+      - name: Prepare standalone showcase
+        shell: bash
+        run: |
+          mkdir -p _site
+          cp interview-site/bitcoin-forecast-intelligence.html _site/index.html
+          touch _site/.nojekyll
       - uses: actions/configure-pages@v5
         with:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: interview-site/pages-dist
+          path: _site
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

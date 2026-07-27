@@ -10,8 +10,10 @@
     "build": "vinext build",
     "export:pages": "node scripts/export-pages.mjs",
     "export:html": "node scripts/export-pages.mjs --local",
+    "export:single-html": "node scripts/export-single-html.mjs",
     "start": "vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
+    "test:single-html": "node --test tests/single-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },
